@@ -1,0 +1,354 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================
+   BASE STYLES & CSS CUSTOM PROPERTIES
+   ================================================ */
+
+@layer base {
+  :root {
+    --bg-primary: 255 255 255;
+    --bg-secondary: 248 250 252;
+    --text-primary: 15 23 42;
+    --text-secondary: 100 116 139;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+    --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+    --glow-primary: rgba(0, 212, 255, 0.15);
+    --glow-accent: rgba(255, 107, 107, 0.1);
+  }
+
+  .dark {
+    --bg-primary: 10 10 20;
+    --bg-secondary: 20 20 35;
+    --text-primary: 248 250 252;
+    --text-secondary: 148 163 184;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+    --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.25);
+    --glow-primary: rgba(0, 212, 255, 0.2);
+    --glow-accent: rgba(255, 107, 107, 0.15);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gradient-to-b from-white via-slate-50/30 to-white text-slate-800 dark:from-[#0a0a14] dark:via-[#0d0d1a] dark:to-[#0a0a14] dark:text-slate-50;
+    transition: background-color 0.4s ease, color 0.3s ease;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+    transition: background-color 0.2s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-500/70;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary-500/20 text-primary-900 dark:text-primary-100;
+  }
+}
+
+/* ================================================
+   COMPONENT STYLES
+   ================================================ */
+
+@layer components {
+  /* Glass card effect — refined with modern blur & subtle border */
+  .glass-card {
+    @apply bg-white/80 dark:bg-white/[0.04] backdrop-blur-xl rounded-2xl;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.4s ease;
+  }
+
+  .dark .glass-card {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  /* Gradient text with animated shimmer */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      #00d4ff 0%,
+      #00a3cc 25%,
+      #06b6d4 50%,
+      #00d4ff 75%,
+      #0ea5e9 100%
+    );
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .dark .gradient-text {
+    background-image: linear-gradient(
+      135deg,
+      #33cfff 0%,
+      #00d4ff 25%,
+      #22d3ee 50%,
+      #33cfff 75%,
+      #38bdf8 100%
+    );
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-24 md:py-32;
+  }
+
+  /* Heading accent bar with animated gradient */
+  .heading-accent {
+    @apply w-20 h-1 rounded-full;
+    background: linear-gradient(90deg, #00d4ff, #06b6d4, #00d4ff);
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Subtle glow effect for cards on hover */
+  .glow-hover {
+    @apply transition-all duration-500 ease-out;
+    position: relative;
+  }
+
+  .glow-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--glow-primary),
+      transparent 40%
+    );
+  }
+
+  .glow-hover:hover::after {
+    opacity: 1;
+  }
+
+  .glow-hover:hover {
+    transform: translateY(-4px);
+  }
+
+  .dark .glow-hover:hover {
+    box-shadow: 0 0 60px -12px rgba(0, 212, 255, 0.2);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, #00d4ff, #0099cc, #ff6b6b, #00d4ff);
+    background-size: 300% 300%;
+    animation: gradientShift 6s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Smooth section fade divider */
+  .section-divider {
+    @apply h-px w-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 212, 255, 0.15) 30%,
+      rgba(0, 212, 255, 0.15) 70%,
+      transparent
+    );
+  }
+
+  /* Magnetic button base */
+  .magnetic-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .magnetic-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      transparent 50%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .magnetic-btn:hover::before {
+    opacity: 1;
+  }
+
+  /* Modern input style */
+  .input-modern {
+    @apply w-full px-4 py-3.5 rounded-xl text-sm;
+    @apply bg-slate-50/80 dark:bg-white/[0.03];
+    @apply border border-slate-200/80 dark:border-white/[0.08];
+    @apply text-slate-800 dark:text-slate-100 placeholder:text-slate-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/40;
+    @apply focus:bg-white dark:focus:bg-white/[0.06];
+    @apply focus:shadow-lg focus:shadow-primary-500/5;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Pulse ring animation */
+  .pulse-ring {
+    position: relative;
+  }
+
+  .pulse-ring::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.015;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .dark .noise-overlay::after {
+    opacity: 0.03;
+  }
+}
+
+/* ================================================
+   UTILITY STYLES
+   ================================================ */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Stagger animation delays for children */
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 480ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 560ms; }
+
+  /* Fluid hover lift */
+  .hover-lift {
+    @apply transition-all duration-400 ease-out;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+  }
+
+  /* Smooth scale on hover */
+  .hover-scale {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* ================================================
+   KEYFRAME ANIMATIONS
+   ================================================ */
+
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes textReveal {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes blurIn {
+  0% { filter: blur(12px); opacity: 0; }
+  100% { filter: blur(0); opacity: 1; }
+}
+
+@keyframes morphBlob {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 50% 70% 60%;
+  }
+  75% {
+    border-radius: 60% 30% 60% 40% / 70% 40% 50% 60%;
+  }
+}
+
+/* ================================================
+   ANIMATED BACKGROUND ORBS
+   ================================================ */
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  animation: morphBlob 12s ease-in-out infinite;
+}
+
+.dark .bg-orb {
+  opacity: 0.06;
+  filter: blur(120px);
+}
