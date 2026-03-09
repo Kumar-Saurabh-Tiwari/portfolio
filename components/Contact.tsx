@@ -32,15 +32,26 @@ export default function Contact() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const btn = e.currentTarget.querySelector("button[type=submit]");
-    if (btn) {
-      setSending(true);
-      setTimeout(() => {
-        setSending(false);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+      const form = e.currentTarget;
+      const data = new FormData(form);
+      const res = await fetch(formEndpoint, {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" },
+      });
+      if (res.ok) {
         setSent(true);
+        form.reset();
         setTimeout(() => setSent(false), 3000);
-      }, 4000);
+      }
+    } catch {
+      // silently handle
+    } finally {
+      setSending(false);
     }
   };
 
@@ -162,9 +173,6 @@ export default function Contact() {
             className="lg:col-span-3"
           >
             <form
-              action={formEndpoint}
-              method="POST"
-              target="_blank"
               onSubmit={handleSubmit}
               className="glass-card p-6 sm:p-8 space-y-5"
             >
